@@ -4,10 +4,12 @@ import com.nvt.ApiException;
 import com.nvt.model.Task;
 import com.nvt.repository.TaskRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -18,13 +20,13 @@ public class TaskController {
     TaskRepository taskRepository;
 
     @PostMapping("/add")
-    public Task add(@Valid @RequestBody Task task) {
+    public Task add(@RequestBody Task task) {
         return taskRepository.save(task);
     }
 
     @PutMapping("/{id}")
     public Task update(@PathVariable(value = "id") Long taskId,
-                           @Valid @RequestBody Task req) {
+                           @RequestBody Task req) {
 
         Task task = taskRepository.findById(taskId)
                 .orElseThrow(() -> new ApiException("Task", "id", taskId));
@@ -48,8 +50,19 @@ public class TaskController {
     }
 
     @GetMapping("/")
-    public List<Task> getAllTasks() {
-        return taskRepository.findAll();
+    public List<Task> getAllTasks(@PathVariable(value = "page") Integer page,
+                                  @PathVariable(value = "size") Integer size,
+                                  @PathVariable(value = "sortBy") String sortBy,
+                                  @PathVariable(value = "ASC") String asc) {
+
+        Pageable sorted = PageRequest.of(page, size);
+
+        if (asc.equals("ASC")) {
+            sorted = PageRequest.of(page, size, Sort.by(sortBy).ascending());
+        } else if (asc.equals("DES")) {
+            sorted = PageRequest.of(page, size, Sort.by(sortBy).descending());
+        }
+        return (List<Task>) taskRepository.findAll(sorted);
     }
 
 }
