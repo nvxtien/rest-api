@@ -1,68 +1,69 @@
 package com.nvt.controllers;
 
-import com.nvt.ApiException;
+import com.nvt.dto.TaskDto;
+import com.nvt.dto.TaskList;
 import com.nvt.model.Task;
-import com.nvt.repository.TaskRepository;
+import com.nvt.service.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.function.Function;
+
+import static java.util.stream.Collectors.toList;
 
 @RestController
 @RequestMapping("/api/task")
 public class TaskController {
 
     @Autowired
-    TaskRepository taskRepository;
+    TaskService taskService;
 
     @PostMapping("/add")
-    public Task add(@RequestBody Task task) {
-        return taskRepository.save(task);
+    public ResponseEntity<?> add(@RequestBody TaskDto req) {
+        Task task = taskService.save(req);
+        if (task.getId() != null) {
+            return new ResponseEntity<>(req, HttpStatus.OK);
+        }
+        return new ResponseEntity<>(new TaskDto(), HttpStatus.EXPECTATION_FAILED);
+
     }
 
     @PutMapping("/{id}")
-    public Task update(@PathVariable(value = "id") Long taskId,
-                           @RequestBody Task req) {
+    public ResponseEntity<?> update(@PathVariable(value = "id") Long taskId,
+                           @RequestBody TaskDto req) {
 
-        Task task = taskRepository.findById(taskId)
-                .orElseThrow(() -> new ApiException("Task", "id", taskId));
-
-        task.setStatus(req.getStatus());
-        task.setStartingDate(req.getStartingDate());
-        task.setEndingDate(req.getEndingDate());
-
-        Task update = taskRepository.save(task);
-        return update;
+        Task task = taskService.update(taskId, req);
+        if (task.getId() != null) {
+            return new ResponseEntity<>(req, HttpStatus.OK);
+        }
+        return new ResponseEntity<>(new TaskDto(), HttpStatus.EXPECTATION_FAILED);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable(value = "id") Long taskId) {
 
-        Task task = taskRepository.findById(taskId)
-                .orElseThrow(() -> new ApiException("Task", "id", taskId));
-
-        taskRepository.delete(task);
+        taskService.delete(taskId);
         return ResponseEntity.ok().build();
     }
 
     @GetMapping("/")
-    public List<Task> getAllTasks(@PathVariable(value = "page") Integer page,
-                                  @PathVariable(value = "size") Integer size,
-                                  @PathVariable(value = "sortBy") String sortBy,
-                                  @PathVariable(value = "ASC") String asc) {
+    public ResponseEntity<TaskList> getAllTasks(@PathVariable(value = "page") Integer page,
+                                                @PathVariable(value = "size") Integer size,
+                                                @PathVariable(value = "sortBy") String sortBy,
+                                                @PathVariable(value = "asc") String asc) {
 
-        Pageable sorted = PageRequest.of(page, size);
+        List<Task> list = taskService.getAllTasks(page, size, sortBy, asc);
+        Function<Task, TaskDto> converter = task -> new TaskDto(task.getWorkName(),
+                task.getStartingDate().toString(),
+                task.getEndingDate().toString(),
+                task.getStatus().toString());
 
-        if (asc.equals("ASC")) {
-            sorted = PageRequest.of(page, size, Sort.by(sortBy).ascending());
-        } else if (asc.equals("DES")) {
-            sorted = PageRequest.of(page, size, Sort.by(sortBy).descending());
-        }
-        return (List<Task>) taskRepository.findAll(sorted);
+        List<TaskDto> taskDtos = list.stream().map(converter).collect(toList());
+        TaskList taskList = new TaskList();
+        taskList.setTaskDtos(taskDtos);
+        return new ResponseEntity<>(taskList, HttpStatus.OK);
     }
-
 }

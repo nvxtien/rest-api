@@ -12,16 +12,17 @@ public class Task {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @NotBlank
+    @Column(name = "work_name", nullable = false)
     private String workName;
 
-    @NotBlank
-    private Date startingDate;
+    @Column(name = "starting_date", nullable = false)
+    private java.sql.Date startingDate;
 
-    @NotBlank
-    private Date endingDate;
+    @Column(name = "ending_date", nullable = false)
+    private java.sql.Date endingDate;
 
-    @NotBlank
+    @Column(name = "status", nullable = false)
+    @Enumerated(EnumType.STRING)
     private Status status;
 
     public Task() {
