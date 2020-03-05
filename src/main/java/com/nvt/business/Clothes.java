@@ -29,25 +29,31 @@ public class Clothes {
             iList.add(tn.get(i) - tn.get(i-1));
         }
 
-        iList = iList.stream().sorted(Comparator.reverseOrder()).collect(Collectors.toList());
+//        iList = iList.stream().sorted(Comparator.reverseOrder()).collect(Collectors.toList());
+        Integer max = Collections.max(iList);
 
-        Map<String, Integer> tnclothes = new HashMap<>();
+//        Map<String, Integer> tnclothes = new HashMap<>();
 //        for (int i = 0; i < iList.size(); i++) {
         Integer i = 0;
+        Integer out = 0;
             Iterator<Integer> iterator = clothes.iterator();
-            tnclothes.put("t" + i, 0);
+//            tnclothes.put("t" + i, 0);
+
             while (iterator.hasNext()) {
+
                 Integer x = iterator.next();
-                if (x <= iList.get(i)) {
-                    tnclothes.put("t" + i, tnclothes.get("t" + i) + 1);
-                    iterator.remove();
+
+                if (x <= max) {
+//                    tnclothes.put("t" + i, tnclothes.get("t" + i) + 1);
+//                    iterator.remove();
+                    out++;
                 }
             }
 //        }
 
         Integer G = nmg.get(2);
         Integer res = 0;
-        List<Integer> vList = tnclothes.values().stream().sorted(Comparator.reverseOrder()).collect(Collectors.toList());
+//        List<Integer> vList = tnclothes.values().stream().sorted(Comparator.reverseOrder()).collect(Collectors.toList());
         /*for (int i = 0; i < vList.size(); i++) {
             if (i + 1 > G) {
                 break;
@@ -55,7 +61,8 @@ public class Clothes {
             res = res + vList.get(i);
         }*/
 //        System.out.print(res);
-          System.out.print(vList.get(0));
+//          System.out.print(vList.get(0));
+        System.out.print(out);
 
     }
 }
