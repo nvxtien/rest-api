@@ -1,67 +1,44 @@
 package com.nvt.business;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
-import java.text.DecimalFormat;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
 
 public class Clothes {
 
     public static void main(String[] args) throws Exception {
 
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        PrintWriter wr = new PrintWriter(System.out);
+        Scanner sc = new Scanner(System.in);
+        int n = sc.nextInt();
+        int m = sc.nextInt();
+        int g = sc.nextInt();
 
-        List<Integer> nmg = Arrays.asList(br.readLine().trim().split(" ")).stream()
-                .map(x -> Integer.parseInt(x)).collect(Collectors.toList());
+        List<Integer> tn = new ArrayList<>();
+        List<Integer> clothes = new ArrayList<>();
 
-        List<Integer> tn = Arrays.asList(br.readLine().trim().split(" ")).stream()
-                .map(x -> Integer.parseInt(x)).collect(Collectors.toList());
-
-        List<Integer> clothes = Arrays.asList(br.readLine().trim().split(" ")).stream()
-                .map(x -> Integer.parseInt(x)).collect(Collectors.toList());
-
-
-        List<Integer> iList = new ArrayList<>();
-        for (int i = 1; i < tn.size(); i++) {
-            iList.add(tn.get(i) - tn.get(i-1));
+        for (int i = 0; i < n; i++) {
+            tn.add(sc.nextInt());
         }
 
-//        iList = iList.stream().sorted(Comparator.reverseOrder()).collect(Collectors.toList());
-        Integer max = Collections.max(iList);
+        for (int j = 0; j < m; j++) {
+            clothes.add(sc.nextInt());
+        }
 
-//        Map<String, Integer> tnclothes = new HashMap<>();
-//        for (int i = 0; i < iList.size(); i++) {
-        Integer i = 0;
+        Integer max = 0;
+        for (int i = 1; i < tn.size(); i++) {
+            if (tn.get(i) - tn.get(i - 1) > max) {
+                max = tn.get(i) - tn.get(i - 1);
+            }
+        }
+
         Integer out = 0;
-            Iterator<Integer> iterator = clothes.iterator();
-//            tnclothes.put("t" + i, 0);
 
-            while (iterator.hasNext()) {
-
-                Integer x = iterator.next();
-
-                if (x <= max) {
-//                    tnclothes.put("t" + i, tnclothes.get("t" + i) + 1);
-//                    iterator.remove();
-                    out++;
-                }
+        for (int i = 0; i < clothes.size(); i++) {
+            if (clothes.get(i) <= max) {
+                out++;
             }
-//        }
+        }
 
-        Integer G = nmg.get(2);
-        Integer res = 0;
-//        List<Integer> vList = tnclothes.values().stream().sorted(Comparator.reverseOrder()).collect(Collectors.toList());
-        /*for (int i = 0; i < vList.size(); i++) {
-            if (i + 1 > G) {
-                break;
-            }
-            res = res + vList.get(i);
-        }*/
-//        System.out.print(res);
-//          System.out.print(vList.get(0));
         System.out.print(out);
 
     }
