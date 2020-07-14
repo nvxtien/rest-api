@@ -1,7 +1,6 @@
-package com.nvt.model;
+package com.nvt.orm;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
 import java.sql.Date;
 
 @Entity

@@ -1,7 +1,7 @@
 package com.nvt.repository;
 
-import com.nvt.model.Status;
-import com.nvt.model.Task;
+import com.nvt.orm.Status;
+import com.nvt.orm.Task;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;

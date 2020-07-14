@@ -1,7 +1,7 @@
 package com.nvt.service;
 
 import com.nvt.dto.TaskDto;
-import com.nvt.model.Task;
+import com.nvt.orm.Task;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

@@ -2,8 +2,8 @@ package com.nvt.service;
 
 import com.nvt.ApiException;
 import com.nvt.dto.TaskDto;
-import com.nvt.model.Status;
-import com.nvt.model.Task;
+import com.nvt.orm.Status;
+import com.nvt.orm.Task;
 import com.nvt.repository.TaskRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;

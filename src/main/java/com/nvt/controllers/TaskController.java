@@ -2,7 +2,7 @@ package com.nvt.controllers;
 
 import com.nvt.dto.TaskDto;
 import com.nvt.dto.TaskList;
-import com.nvt.model.Task;
+import com.nvt.orm.Task;
 import com.nvt.service.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
